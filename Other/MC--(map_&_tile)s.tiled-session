@@ -1,0 +1,175 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "/home/abdenours/Desktop/JAVA : Object-Oriented Programming and Conception/A.M.C.J. ; A Minecraft Coding Journey/Map_s/DayMap_prairie_1st-attempt.tmx",
+    "automapping.whileDrawing": true,
+    "expandedProjectPaths": [
+    ],
+    "exportAsImage.useCurrentScale": true,
+    "exportAsImage.visibleLayersOnly": true,
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "/home/abdenours/Desktop/JAVA : Object-Oriented Programming and Conception/A.M.C.J. ; A Minecraft Coding Journey/Map_s/DayMap_prairie_1st-attempt.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 780.6666666666667,
+                "y": 461.99999999999994
+            }
+        },
+        "/home/abdenours/Desktop/JAVA : Object-Oriented Programming and Conception/A.M.C.J. ; A Minecraft Coding Journey/Map_s/DayMap_snowy-prairie.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 699,
+                "y": 799
+            }
+        },
+        "/home/abdenours/Desktop/JAVA : Object-Oriented Programming and Conception/A.M.C.J. ; A Minecraft Coding Journey/TileSet_s/simple-tree_tile.tsx": {
+            "scaleInDock": 1
+        },
+        "/home/abdenours/Desktop/JAVA : Object-Oriented Programming and Conception/A.M.C.J. ; A Minecraft Coding Journey/TileSet_s/terrain-medium_tile.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 5.5
+        },
+        "/home/abdenours/Desktop/JAVA : Object-Oriented Programming and Conception/A.M.C.J. ; A Minecraft Coding Journey/TileSet_s/winter-trees_tile.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 0.5
+        },
+        "Map_s/DayMap_1st-attempt.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 921,
+                "y": 925
+            }
+        },
+        "Map_s/DayMap_prairie_1st-attempt.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 761,
+                "y": 853
+            }
+        },
+        "Map_s/DayMap_snowy-prairie.tmx": {
+            "expandedObjectLayers": [
+                4
+            ],
+            "scale": 0.33,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 389.3939393939395,
+                "y": 837.8787878787879
+            }
+        },
+        "Map_s/DayMap_snowy-prairie.tmx#dying-tree-pine": {
+            "dynamicWrapping": true
+        },
+        "Map_s/DayMap_snowy-prairie.tmx#terrain_medium": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Map_s/EDITEDdying-tree-pine_tile.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Map_s/Edying-tree-pine_tile.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Map_s/dying-tree-pine_tile.tsx": {
+            "scaleInDock": 0.33,
+            "scaleInEditor": 0.75
+        },
+        "TileSet_s/1tree_tile.tsx": {
+            "scaleInDock": 0.5,
+            "scaleInEditor": 1
+        },
+        "TileSet_s/789tree_tile.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 3
+        },
+        "TileSet_s/dying-tree-pine.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 0.25,
+            "scaleInEditor": 1
+        },
+        "TileSet_s/simple-tree_tile.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "TileSet_s/simple_tree.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "TileSet_s/simple_tree_tile.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "TileSet_s/terrain-medium_tile.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 3
+        },
+        "TileSet_s/terrain_medium.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 2.4,
+            "scaleInEditor": 4
+        },
+        "TileSet_s/tree_tile.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 2.4,
+            "scaleInEditor": 0.75
+        },
+        "TileSet_s/tree_tileS.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        },
+        "TileSet_s/winter-trees_tile.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.externalTilesetPath": "/home/abdenours/Desktop/JAVA : Object-Oriented Programming and Conception/A.M.C.J. ; A Minecraft Coding Journey/TileSet_s",
+    "last.imagePath": "/home/abdenours/Desktop/JAVA : Object-Oriented Programming and Conception/A.M.C.J. ; A Minecraft Coding Journey/Assets",
+    "map.height": 12,
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 22,
+    "openFiles": [
+        "/home/abdenours/Desktop/JAVA : Object-Oriented Programming and Conception/A.M.C.J. ; A Minecraft Coding Journey/Map_s/DayMap_prairie_1st-attempt.tmx",
+        "/home/abdenours/Desktop/JAVA : Object-Oriented Programming and Conception/A.M.C.J. ; A Minecraft Coding Journey/Map_s/DayMap_snowy-prairie.tmx"
+    ],
+    "project": "MC--(map_&_tile)s.tiled-project",
+    "recentFiles": [
+        "/home/abdenours/Desktop/JAVA : Object-Oriented Programming and Conception/A.M.C.J. ; A Minecraft Coding Journey/Map_s/DayMap_snowy-prairie.tmx",
+        "/home/abdenours/Desktop/JAVA : Object-Oriented Programming and Conception/A.M.C.J. ; A Minecraft Coding Journey/Map_s/DayMap_prairie_1st-attempt.tmx",
+        "Map_s/DayMap_snowy-prairie.tmx",
+        "Map_s/DayMap_prairie_1st-attempt.tmx",
+        "TileSet_s/winter-trees_tile.tsx",
+        "TileSet_s/simple-tree_tile.tsx",
+        "TileSet_s/simple_tree.tsx",
+        "TileSet_s/terrain_medium.tsx",
+        "TileSet_s/dying-tree-pine.tsx",
+        "Map_s/dying-tree-pine_tile.tsx",
+        "Map_s/EDITEDdying-tree-pine_tile.tsx",
+        "Map_s/Edying-tree-pine_tile.tsx"
+    ],
+    "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 280,
+        "width": 168
+    },
+    "tileset.type": 1
+}
