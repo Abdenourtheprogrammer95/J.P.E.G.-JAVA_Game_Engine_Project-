@@ -11,18 +11,12 @@ public class Skeleton extends Entity {
 		super(hp, damage, "Skeleton");
 	}
 
-    /* @Override
-    public void canDrop() {
-        this.setDropped("either a bone, an arrow, or both");
-        super.canDrop();
-    } */
-
     @Override
     protected void initDropTable() {
         dropTable = Map.of(
-                DroppableItems.ARROW, new DropRule(0.9, 1, 3),
-                DroppableItems.BONE, new DropRule(0.9, 1, 3),
-                DroppableItems.XP, new DropRule(0.9, 1, 3)
+                DroppableItems.ARROW, new DropRule(0.5, 0, 5),
+                DroppableItems.BONE, new DropRule(0.6, 0, 5),
+                DroppableItems.XP, new DropRule(0.9, 1,5)
                 );
     }
 }

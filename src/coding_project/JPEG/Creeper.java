@@ -11,17 +11,11 @@ public class Creeper extends Entity {
 		super(hp, damage, "Creeper");
 	}
 
-    /* @Override
-    public void canDrop() {
-        this.setDropped("gunpowder");
-        super.canDrop();
-    } */
-
     @Override
     protected void initDropTable() {
         dropTable = Map.of(
-                DroppableItems.GUN_POWDER, new DropRule(0.9, 1, 3),
-                DroppableItems.XP, new DropRule(0.9, 1, 3)
+                DroppableItems.GUN_POWDER, new DropRule(0.6667, 0, 5),
+                DroppableItems.XP, new DropRule(0.9, 1, 5)
                 );
     }
 }

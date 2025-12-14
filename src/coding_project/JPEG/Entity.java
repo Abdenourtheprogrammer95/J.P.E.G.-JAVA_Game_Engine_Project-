@@ -16,15 +16,15 @@ public abstract class Entity implements Movable, Droppable {
         this.name = null;
     }
 
+    public Entity(String name) {
+        this.hp = 1;
+        this.damage = 1;
+        this.name = name;
+    }
+
 	public Entity(int hp, int damage) {
 		this.hp = hp;
 		this.damage = damage;
-	}
-
-	public Entity(String name, String dropped) {
-		this.hp = 1;
-		this.damage = 1;
-		this.name = name;
 	}
 
 	public Entity(int hp, int damage, String name) {
@@ -32,12 +32,6 @@ public abstract class Entity implements Movable, Droppable {
 		this.damage = damage;
 		this.name = name;
 	}
-
-    public Entity(int hp, int damage, String name, String dropped) {
-        this.hp = hp;
-        this.damage = damage;
-        this.name = name;
-    }
 
 	public int getHp() {
 		return this.hp;	
@@ -111,7 +105,7 @@ public abstract class Entity implements Movable, Droppable {
     public Map<Item, Integer> generateDrops() {
         Map<Item, Integer> drops = new HashMap<>();
 
-        for (var entry : dropTable.entrySet()) {
+        for (var entry : dropTable.entrySet()) { // using the "var" keyword, so I don't have to declare a type
             Item item = entry.getKey();
             DropRule rule = entry.getValue();
 

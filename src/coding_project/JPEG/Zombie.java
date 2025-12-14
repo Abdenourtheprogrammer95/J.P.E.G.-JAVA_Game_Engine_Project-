@@ -11,20 +11,14 @@ public class Zombie extends Entity {
 		super(hp, damage, "Zombie");
 	}
 
-    /* @Override
-    public void canDrop() {
-        this.setDropped("rotten flesh, a potato/carrot or even an iron ingot");
-        super.canDrop();
-    } */
-
     @Override
     protected void initDropTable() {
         dropTable = Map.of(
-                DroppableItems.ROTTEN_FLESH, new DropRule(0.9, 1, 3),
-                DroppableItems.IRON_INGOT, new DropRule(0.9, 1, 3),
-                DroppableItems.POTATO, new DropRule(0.9, 1, 3),
-                DroppableItems.CARROT, new DropRule(0.9, 1, 3),
-                DroppableItems.XP, new DropRule(0.9, 1, 3)
+                DroppableItems.ROTTEN_FLESH, new DropRule(0.7, 0, 5),
+                DroppableItems.IRON_INGOT, new DropRule(0.025, 0, 1),
+                DroppableItems.POTATO, new DropRule(0.025, 0, 1),
+                DroppableItems.CARROT, new DropRule(0.025, 0, 1),
+                DroppableItems.XP, new DropRule(0.9, 1, 5)
         );
     }
 }

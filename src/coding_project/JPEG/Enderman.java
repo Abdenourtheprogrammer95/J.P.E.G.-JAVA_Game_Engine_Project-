@@ -11,18 +11,11 @@ public class Enderman extends Entity {
 		super(hp, damage, "Enderman");
 	}
 
-    /* problems for later
-    @Override
-    public void canDrop() {
-        this.setDropped("an enderpearl");
-        super.canDrop();
-    } */
-
     @Override
     protected void initDropTable() {
         dropTable = Map.of(
-                DroppableItems.ENDER_PEARL, new DropRule(0.9, 1, 3),
-                DroppableItems.XP, new DropRule(0.9, 1, 3)
+                DroppableItems.ENDER_PEARL, new DropRule(0.5, 0, 4),
+                DroppableItems.XP, new DropRule(0.9, 1, 5)
                 );
     }
 }

@@ -1,6 +1,6 @@
 package coding_project.JPEG;
 
-// import static java.lang.Math.random;
+import static java.lang.Math.random;
 
 public class DropRule {
     private final double chance;
@@ -15,12 +15,12 @@ public class DropRule {
 
     public int rollAmount() {
         // No drop
-        if (Math.random() > chance) {
+        if (random() > chance) {
             return 0;
         }
 
         // Random between min and max (inclusive)
-        return min + (int) (Math.random() * (max - min + 1));
+        return min + (int) (random() * (max - min + 1));
     }
 
 }

@@ -11,17 +11,11 @@ public class Phantom extends Entity {
 		super(hp, damage, "Phantom");
 	}
 
-    /* @Override
-    public void canDrop() {
-        this.setDropped("a membrane");
-        super.canDrop();
-    } */
-
     @Override
     protected void initDropTable() {
         dropTable = Map.of(
-                DroppableItems.PHANTOM_MEMBRANE, new DropRule(0.9, 1, 3),
-                DroppableItems.XP, new DropRule(0.9, 1, 3)
+                DroppableItems.PHANTOM_MEMBRANE, new DropRule(0.4, 0, 4),
+                DroppableItems.XP, new DropRule(0.9, 1, 5)
                 );
     }
 }
