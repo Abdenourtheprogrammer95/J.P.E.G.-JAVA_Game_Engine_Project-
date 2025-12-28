@@ -2,13 +2,15 @@ package coding_project.JPEG;
 
 import java.util.Map;
 
-public class Zombie extends Entity {
+public class Zombie extends Entity implements Monster {
 	public Zombie() {
-		super(10, 3, "Zombie");
+		super(10, 3, "Zombie", 0.92, 0.92);
+		setSprite(SpriteLoader.load("entities/zombie.png"));
 	}
 
-	public Zombie(int hp, int damage) {
-		super(hp, damage, "Zombie");
+	public Zombie(int hp, int damage, double x_speed, double y_speed) {
+		super(hp, damage, "Zombie",  x_speed, y_speed);
+		setSprite(SpriteLoader.load("entities/zombie.png"));
 	}
 
     @Override
@@ -21,4 +23,14 @@ public class Zombie extends Entity {
                 DroppableItems.XP, new DropRule(0.9, 1, 5)
         );
     }
+
+	@Override
+	public EnemyState getState() {
+		return null;
+	}
+
+	@Override
+	public void setState(EnemyState getState) {
+
+	}
 }

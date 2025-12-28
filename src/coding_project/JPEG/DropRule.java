@@ -14,7 +14,7 @@ public class DropRule {
     }
 
     public int rollAmount() {
-        // No drop
+        // No drop if randomness threshold is exceeded
         if (random() > chance) {
             return 0;
         }
