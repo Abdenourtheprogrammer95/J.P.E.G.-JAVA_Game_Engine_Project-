@@ -1,0 +1,29 @@
+# IntelliJ/LibGDX
+.idea/
+*.iml
+.gradle/
+gradle-wrapper.jar
+gradle-wrapper.properties
+
+# Build output
+out/
+build/
+target/
+
+# Miscellaneous
+*.log
+*.md
+
+# Tiled
+*.tiled-project
+*.tiled-session
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# OS files
+.DS_Store
+Thumbs.db

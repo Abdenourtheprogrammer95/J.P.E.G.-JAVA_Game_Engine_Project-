@@ -1,0 +1,11 @@
+Spider.png
+size:256,32
+repeat:none
+spider__walk--01
+bounds:77,3,33,17
+spider__walk--02
+bounds:112,2,32,18
+spider__walk--03
+bounds:2,2,36,18
+spider__walk--04
+bounds:40,3,35,17
