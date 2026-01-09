@@ -160,7 +160,7 @@ prettyPrint=false
 legacyOutput=false
 
 scaleFactors=[{suffix:"",factor:1,resampling:bicubic}]
-inputFiles=[{path:Image_s/Sprite_s/Spider/spider__walk--04.png,type:Input,regionName:null},{path:Image_s/Sprite_s/Spider/spider__walk--03.png,type:Input,regionName:null},{path:Image_s/Sprite_s/Spider/spider__walk--02.png,type:Input,regionName:null},{path:Image_s/Sprite_s/Spider/spider__walk--01.png,type:Input,regionName:null}]
+inputFiles=[{path:Image_s/Sprite_s/Spider/spider__walk--01.png,type:Input,regionName:null},{path:Image_s/Sprite_s/Spider/spider__walk--02.png,type:Input,regionName:null},{path:Image_s/Sprite_s/Spider/spider__walk--03.png,type:Input,regionName:null},{path:Image_s/Sprite_s/Spider/spider__walk--04.png,type:Input,regionName:null},{path:Image_s/Sprite_s/Spider/spider__idle.png,type:Input,regionName:null}]
 keepInputFileExtensions=false
 
 

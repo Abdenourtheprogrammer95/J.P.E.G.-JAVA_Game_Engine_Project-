@@ -8,14 +8,14 @@ import java.util.HashMap;
 
 import static coding_project.JPEG.EnemyState.IDLE;
 
-public abstract class Entity implements Movable, Droppable {
+public abstract class Entity implements Movable, Droppable, DamageSource {
 	private int hp, damage;
 	private String name;
 
     protected Map<Item, DropRule> dropTable;
 	protected BufferedImage sprite;
 
-	private float moveSpeed, x_pos = 0, y_pos = 0;
+	private float moveSpeed, x_pos = 0, y_pos = 0, moveDX = 0f, moveDY = 0f;
 
 	float threshold; //sets the spot distance for hostile entities
     private boolean markedForRemoval = false;
@@ -23,6 +23,15 @@ public abstract class Entity implements Movable, Droppable {
     protected float collisionHeight;
 
     private EnemyState currentState = IDLE;
+
+    protected boolean attacking = false;
+    protected float attackTimer = 0f;
+    protected float attackDuration = 0.25f; // seconds, tweak freely
+    protected boolean attackTriggered = false;
+    protected boolean hurt = false;
+    protected float hurtTimer = 0f;
+    protected float hurtDuration = 0.2f; // tweak freely
+    protected LivingEntity attackTarget;
 
 	/* All constructors must ensure that the drops table is initialized whenever any entity is created.
 	Otherwise, a NullPointerException will be triggered when trying to access it. */
@@ -76,11 +85,11 @@ public abstract class Entity implements Movable, Droppable {
 		return this.hp;
 	}
 
-	public void setHp(int hp) {
-		this.hp = hp;
-	}
+    public void setHp(int hp) {
+        this.hp = Math.max(0, hp);
+    }
 
-	public int getDamage() {
+    public int getDamage() {
 		return this.damage;
 	}
 
@@ -120,6 +129,40 @@ public abstract class Entity implements Movable, Droppable {
 		this.y_pos = y_pos;
 	}
 
+    public float getMoveDX() {
+        return this.moveDX;
+    }
+
+    public float getMoveDY() {
+        return this.moveDY;
+    }
+
+    public float getAttackTimer() {
+        return attackTimer;
+    }
+
+    public void requestMove(float dx, float dy) {
+        // ^ USER-ADDED DEBUGGING ^
+        if (Float.isNaN(dx) || Float.isNaN(dy)) {
+            System.err.println("[MOVE][ERROR] NaN request ignored");
+            return;
+        }
+
+        System.out.println(
+            "[MOVE][REQ] " + getName() +
+                " dx=" + dx + " dy=" + dy
+        );
+        // ^ USER-ADDED DEBUGGING ^
+
+        this.moveDX = dx;
+        this.moveDY = dy;
+    }
+
+    public void clearMoveRequest() {
+        this.moveDX = 0f;
+        this.moveDY = 0f;
+    }
+
 	public BufferedImage getSprite() {
 		return sprite;
 	}
@@ -141,10 +184,23 @@ public abstract class Entity implements Movable, Droppable {
     }
 
     public void setCurrentState(EnemyState state) {
+        // v User-Added DEBUGGING v
+        if (this.currentState != state) {
+            System.out.println(
+                "[STATE] " + getName() + ": " +
+                    this.currentState + " -> " + state
+            );
+        }
+        // ^ User-Added DEBUGGING ^
+
+        if (currentState == EnemyState.DEAD) return; // Hard lock
         this.currentState = state;
+        if (state == EnemyState.DEAD) {
+            markForRemoval();
+        }
     }
 
-    void markForRemoval() {
+    public void markForRemoval() {
         this.markedForRemoval = true;
     }
 
@@ -152,6 +208,99 @@ public abstract class Entity implements Movable, Droppable {
         return this.markedForRemoval;
     }
 
+    public void selfKill() {
+        hp = 0;
+        onDeath();
+    }
+
+    protected void onDeath() {
+        setCurrentState(EnemyState.DEAD);
+    }
+
+    public void update(float delta) {
+        if (this instanceof Skeleton) {
+            System.out.println(
+                "[SKEL DEBUG] state=" + currentState +
+                    " attacking=" + attacking +
+                    " canMove=" + canMove() +
+                    " DX=" + getMoveDX() +
+                    " DY=" + getMoveDY() +
+                    " x=" + getXpos() +
+                    " y=" + getYpos()
+            );
+        }
+
+        updateAttack(delta);
+        updateHurt(delta);
+    }
+
+    public void startAttack(LivingEntity target) {
+        // v USER-ADDED DEBUGGING v
+        System.out.println("[ATTACK] startAttack()");
+        // ^ USER-ADDED DEBUGGING ^
+
+        if (attackTriggered) return;
+
+        attackTriggered = true;
+        attacking = true;
+        attackTimer = 0f;
+        attackTarget = target;
+
+        setCurrentState(EnemyState.ATTACK);
+        clearMoveRequest(); // HARD STOP: I don't want entities to keep moving while they attack
+    }
+
+    public void updateAttack(float delta) {
+        // v USER-ADDED DEBUGGING v
+        System.out.println(
+            "[ATTACK] " + name +
+                " state=" + currentState +
+                " attacking=" + attacking +
+                " timer=" + attackTimer +
+                " duration=" + attackDuration
+        );
+        // ^ USER-ADDED DEBUGGING ^
+
+        if (!attacking || currentState!=EnemyState.ATTACK) return;
+
+        attackTimer += delta;
+
+        clearMoveRequest(); // ensure NO movement during attack
+
+        if (attackTimer >= attackDuration) {
+            attackTimer = 0f;
+            onAttackRelease();
+
+            if (!attacking) {
+                onAttackFinished(); // Finalizing attack
+            }
+        }
+
+        // v USER-ADDED DEBUGGING v
+        System.out.println(
+            "[ATTACK] timer=" + attackTimer +
+                " attacking=" + attacking +
+                " state=" + currentState
+        );
+        // ^ USER-ADDED DEBUGGING ^
+    }
+
+    public void onAttackFinished() {
+        attackTriggered = false;
+        setCurrentState(EnemyState.CHASE);
+    }
+
+    protected void onAttackRelease() {
+        attacking = false;
+        attackTriggered = false;
+        setCurrentState(EnemyState.CHASE);
+    }
+
+    public boolean isAttacking() {
+        return attacking;
+    }
+
+    @Deprecated
     public void displayEntity() {
 		System.out.println("Entity "+name+" has "+hp+" health points and can deal "+damage+" damage points.");
 	}
@@ -160,36 +309,80 @@ public abstract class Entity implements Movable, Droppable {
 
 	public void takeDamage(int damage) {
 		setHp(getHp() - damage);
+
+        if (getHp() > 0) {
+            startHurt();
+        } else {
+            setCurrentState(EnemyState.DEAD);
+        }
 	}
+
+    public void startHurt() {
+        /* Hard cancelling any attack to follow the self-imposed rule:
+        an entity cannot  attack and hurt at the same time */
+        attacking = false;
+        attackTriggered = false;
+        attackTimer = 0;
+
+        hurt = true;
+        hurtTimer = 0f;
+        setCurrentState(EnemyState.HURT);
+    }
+
+    public void updateHurt(float delta) {
+        if (!hurt) return;
+
+        hurtTimer += delta;
+        clearMoveRequest();
+
+        if (hurtTimer >= hurtDuration) {
+            hurt = false;
+            hurtTimer = 0f;
+            setCurrentState(EnemyState.IDLE); // or CHASE later via AI
+        }
+    }
 
 	/* The following methods are only relevant to hostile entities (monsters),
 	   but I decided to not have them as default methods in the interface: */
 
-	public void triggerPathFinding(Entity enemy, Player player) {
-		double dx = player.getXpos() - enemy.getXpos();
-		double dy = player.getYpos() - enemy.getYpos();
+	public void triggerPathFinding(LivingEntity target) {
+		double dx = target.getXpos() - getXpos(), dy = target.getYpos() - getYpos(),
+            stepX = Math.signum(dx), stepY = Math.signum(dy);
 
-		double stepX = Math.signum(dx);
-		double stepY = Math.signum(dy);
+        if (Math.abs(dx) > Math.abs(dy)) {
+            requestMove((float) stepX, 0);
+        } else {
+            requestMove(0, (float) stepY);
+        }
+    }
 
-		if (Math.abs(dx) > Math.abs(dy)) {
-			move(enemy, (float) stepX, 0, getMoveSpeed());
-		} else {
-			move(enemy, 0, (float) stepY, getMoveSpeed());
-		}
-	}
+    public void triggerChase(LivingEntity target) {
+        float dx = target.getXpos() - getXpos(), dy = target.getYpos() - getYpos(), len2 = dx * dx + dy * dy;
 
-	public void triggerChase(Entity enemy, Player player) {
-		double dx = player.getXpos()-enemy.getXpos(),
-				dy = player.getYpos()-enemy.getYpos(),
+        if (len2 < 0.0001f) {
+            clearMoveRequest();
+            return;
+        }
+
+        float invLen = 1f / (float) Math.sqrt(len2);
+        requestMove(dx * invLen, dy * invLen);
+    }
+
+    /*
+	public void triggerChase(LivingEntity target) {
+		double dx = target.getXpos()-getXpos(), dy = target.getYpos()-getYpos(),
 				distanceToPlayer = Math.sqrt(dx*dx+dy*dy);
-		// monster already at player location
-		if (distanceToPlayer == 0) return;
+
+        // monster already at player location
+		if (distanceToPlayer < 0.001f) {
+            clearMoveRequest();
+            return;
+        };
 
 		float stepX = (float) (dx/distanceToPlayer), stepY = (float) (dy/distanceToPlayer);
-
-		move(enemy, stepX, stepY, enemy.getMoveSpeed());
+        requestMove(stepX, stepY);
 	}
+    */
 
     @Override
     public Map<Item, Integer> generateDrops() {
@@ -209,10 +402,13 @@ public abstract class Entity implements Movable, Droppable {
     }
 
 	@Override
-	public void canMove() {
-		x_pos += moveSpeed;
-        y_pos += moveSpeed;
+	public boolean canMove() {
+        return !attacking;
 	}
+
+    public boolean isDead() {
+        return currentState == EnemyState.DEAD;
+    }
 
 	public List<DroppedItem> drop(float x, float y) {
 		List<DroppedItem> worldDrops = new ArrayList<>();

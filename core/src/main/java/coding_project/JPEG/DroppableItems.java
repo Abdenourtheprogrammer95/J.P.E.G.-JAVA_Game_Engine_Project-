@@ -53,6 +53,7 @@ public enum DroppableItems implements Item {
     },
 
     // players can pick up ammunition from slayed skeletons (in this case: arrows)
+    @Deprecated
     ARROW("Image_s/Sprite_s/Drop_s/arrow.png") {
         @Override
         public void onAcquire(Player p, int amount) {
@@ -98,14 +99,15 @@ public enum DroppableItems implements Item {
         }
     },
 
-    /* PHANTOM_MEMBRANE("Image_s/Sprite_s/Drop_s/phantom_membrane.png") {
+    @Deprecated
+    PHANTOM_MEMBRANE("Image_s/Sprite_s/Drop_s/phantom_membrane.png") {
         @Override
         public void onAcquire(Player p, int amount) {
             // ...
         }
-    }, */
+    },
 
-    // similar to the way rotten flesh behaves
+    // affects the player in a way similar to how rotten flesh do
     SPIDER_EYE("Image_s/Sprite_s/Drop_s/spider_eye.png") {
         @Override
         public void onAcquire(Player p, int amount) {

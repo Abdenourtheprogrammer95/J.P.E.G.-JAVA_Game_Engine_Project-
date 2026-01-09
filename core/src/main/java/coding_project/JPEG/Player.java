@@ -2,15 +2,14 @@ package coding_project.JPEG;
 
 import java.util.Map;
 
-public class Player extends Entity {
-    private static int bowDamage;
-    private static int weaponDamage;
-	private static int armorResistance;
-    private static int quiver = 0;
-    private static int experience = 0;
+public class Player extends Entity implements LivingEntity, AttackTarget {
+    private static int weaponDamage, armorResistance, experience = 0;
+
+    @Deprecated
+    private static int bowDamage, quiver = 0;
 
 	public Player() {
-		super(600, 1);
+		super(600, 1, "Steve");
 		this.weaponDamage = 1;
 		this.armorResistance = 10;
 	}
@@ -20,7 +19,7 @@ public class Player extends Entity {
 	}
 
 	public Player(int weaponDamage, int armor_resistance) {
-		super(600, 1);
+		super(600, 1, "Steve");
 		this.weaponDamage = weaponDamage;
 		this.armorResistance = armor_resistance;
 	}
@@ -62,10 +61,12 @@ public class Player extends Entity {
 		this.armorResistance = armorResistance;
 	}
 
+    @Deprecated
     public int getQuiver() {
         return quiver;
     }
 
+    @Deprecated
     public void setQuiver(int arrowsNb) {
         this.quiver += arrowsNb;
     }
@@ -98,5 +99,16 @@ public class Player extends Entity {
         dropTable = Map.of(
                 DroppableItems.XP, new DropRule(chance, 0, 7)
         );
+    }
+
+    @Override
+    public void takeDamage(int damage) {
+        setHp(getHp() - damage);
+        System.out.println("[PLAYER] took " + damage + "damage -> hp = " + getHp());
+    }
+
+    @Override
+    public boolean isDead() {
+        return getHp()<=0;
     }
 }

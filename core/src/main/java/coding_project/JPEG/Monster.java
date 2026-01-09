@@ -1,37 +1,55 @@
 package coding_project.JPEG;
 
-import com.mygdx.game.PlayerActor;
-
 public interface Monster {
-    public abstract String getAnimationPrefix(EnemyState state);
-
+    String getAnimationPrefix(EnemyState state);
     EnemyType getEnemyType();
 
-    default void updateAI(PlayerActor player, Entity enemy) {
-        float dx = player.getX() - enemy.getXpos(), dy = player.getY() - enemy.getYpos(), dist2 = dx * dx + dy * dy;
-        float threshold = enemy.threshold;
+    default boolean canAttack() {
+        return true;
+    }
 
-        if (dist2 < threshold * threshold) {
-            double dist = Math.sqrt(dist2);
-            if (dist > 0.0001f) {
-                // Compute normalized direction
-                float dirX = (float) (dx / dist), dirY = (float) (dy / dist);
+    default void updateAI(LivingEntity target, Entity enemy) {
+        // v USER-ADDED DEBUGGING v
+        System.out.println(
+            "[AI] " + enemy.getName() +
+                " state=" + enemy.getCurrentState() +
+                " dist=" + String.format("%.3f",
+                Math.hypot(
+                    target.getXpos() - enemy.getXpos(),
+                    target.getYpos() - enemy.getYpos()
+                )
+            )
+        );
+        // ^ USER-ADDED DEBUGGING ^
 
-                // Apply velocity using constant moveSpeed
-                float vx = dirX * enemy.getMoveSpeed(), vy = dirY * enemy.getMoveSpeed();
+        EnemyState state = enemy.getCurrentState();
 
-                // Move the enemy
-                enemy.move(enemy, vx, vy, 1f); // scale factor = 1f, moveSpeed already applied
+        if (enemy.isAttacking() ||
+            state == EnemyState.ATTACK || state == EnemyState.HURT || state == EnemyState.DEAD) {
+            return;
+        }
+
+        float dx = target.getXpos() - enemy.getXpos(), dy = target.getYpos() - enemy.getYpos(),
+            dist = (float) Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < 0.2f) {
+            enemy.clearMoveRequest();
+            return;
+        }
+
+        if (dist <= enemy.threshold*0.08f) {
+            if (this.canAttack() && !enemy.isAttacking()) {
+                enemy.startAttack(target);
+            } else {
+                enemy.setCurrentState(EnemyState.IDLE);
+                enemy.clearMoveRequest();
             }
+        } else if (dist <= enemy.threshold) {
             enemy.setCurrentState(EnemyState.CHASE);
+        } else if (dist <= enemy.threshold*1.5f) {
+            enemy.setCurrentState(EnemyState.WALK);
         } else {
             enemy.setCurrentState(EnemyState.IDLE);
         }
-
-        System.out.println(
-            enemy.getClass().getSimpleName() +
-                " state=" + enemy.getCurrentState() +
-                " speed=(" + enemy.getMoveSpeed() + ")"
-        );
     }
 }

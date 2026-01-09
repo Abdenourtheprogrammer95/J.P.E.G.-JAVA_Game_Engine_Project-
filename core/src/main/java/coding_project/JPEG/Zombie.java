@@ -3,10 +3,10 @@ package coding_project.JPEG;
 import java.util.Map;
 
 public class Zombie extends Entity implements Monster {
-    private String path = "Image_s/Sprite_s/Zombie/zombie__idle.png";
+    private final String path = "Image_s/Sprite_s/Zombie/zombie__idle.png";
 
 	public Zombie() {
-		super(10, 3, "Zombie", 0.92f, 14f, 16f);
+		super(10, 3, "Zombie", 4.6f, 14f, 16f);
         this.threshold = 35f;
         setSprite(SpriteLoader.load(path));
 	}

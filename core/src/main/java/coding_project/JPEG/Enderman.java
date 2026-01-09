@@ -3,11 +3,10 @@ package coding_project.JPEG;
 import java.util.Map;
 
 public class Enderman extends Entity implements Monster {
-	private EnemyState state;
-    private String path = "Image_s/Sprite_s/Enderman/enderman__idle.png";
+    private final String path = "Image_s/Sprite_s/Enderman/enderman__idle.png";
 
 	public Enderman() {
-		super(20, 7, "Enderman", 1.2f);
+		super(20, 7, "Enderman", 6.0f);
         this.threshold = 64f;
 		setSprite(SpriteLoader.load(path));
 	}
@@ -26,10 +25,16 @@ public class Enderman extends Entity implements Monster {
                 );
     }
 
+    @Override
+    public boolean canAttack() {
+        return false;
+    }
+
 	@Override
-	public void triggerChase(Entity enderman, Player player) {
-        // teleportation (later)
-	}
+	 public void triggerChase(LivingEntity target) {
+        super.triggerChase(target);
+        // teleportation (later);
+	 }
 
     @Override
     public EnemyType getEnemyType() {
@@ -40,13 +45,12 @@ public class Enderman extends Entity implements Monster {
     public String getAnimationPrefix(EnemyState state) {
         switch (state) {
             case IDLE:
+            case ATTACK:
                 return "enderman__idle";
             case WALK:
                 return "enderman__calm__walk";
             case CHASE:
                 return "enderman__chase__walk";
-            case ATTACK:
-                return null;
             case HURT:
             case  DEAD:
                 return "enderman__hurt";

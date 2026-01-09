@@ -3,15 +3,15 @@ package coding_project.JPEG;
 import java.util.Map;
 
 public class Spider extends Entity implements Monster {
-    private String path = "Image_s/Sprite_s/Spider/Spider__sprite--sheet.png";
+    private final String path = "Image_s/Sprite_s/Spider/spider__idle.png";
 
     public Spider() {
-		super(8, 2, "Spider", 1.4f);
+		super(8, 2, "Spider", 6.0f);
         this.threshold = 16f;
 		setSprite(SpriteLoader.load(path));
 	}
 
-	public Spider(int hp, int damage, double x_speed, float moveSpeed) {
+	public Spider(int hp, int damage, float moveSpeed) {
 		super(hp, damage, "Spider", moveSpeed);
         this.threshold = 16f;
 		setSprite(SpriteLoader.load(path));
@@ -35,6 +35,7 @@ public class Spider extends Entity implements Monster {
     public String getAnimationPrefix(EnemyState state) {
         switch (state) {
             case IDLE:
+                return "spider__idle";
             case WALK:
             case CHASE:
                 return "spider__walk";

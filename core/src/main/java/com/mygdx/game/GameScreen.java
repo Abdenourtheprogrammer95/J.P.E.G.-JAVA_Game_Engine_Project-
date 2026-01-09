@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 // Tiled imports
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -26,26 +28,27 @@ import java.util.EnumMap;
 import java.util.List;
 
 public class GameScreen implements Screen {
-    private Collision collision;
-
     // Map
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
+    private Collision collision;
 
     // LibGDX core
-    private SpriteBatch batch;
+    private final SpriteBatch batch;
     private OrthographicCamera camera;
+    private Viewport viewport;
 
+    public static final float WORLD_WIDTH  = 32f;
+    public static final float WORLD_HEIGHT = 18f; // 16:9
     private int worldHeight;
     private int worldWidth;
 
     // Player
-    private Player player;
     private PlayerActor playerActor;
 
     // Enemies
-    private Array<Entity> enemies = new Array<>();
-    private List<EnemyActor> enemyActors = new ArrayList<>();
+    private final Array<Entity> enemies = new Array<>();
+    private final List<EnemyActor> enemyActors = new ArrayList<>();
 
     // Levels
     private int currentLevelIndex = 0;
@@ -55,16 +58,16 @@ public class GameScreen implements Screen {
     private boolean allLevelsCompleted = false;
 
     // Current wave state
-    private int currentWaveIndex = 0;
-    private List<Wave> waves = new ArrayList<>();
+    private final List<Wave> waves = new ArrayList<>();
 
     private TextureAtlas defaultAtlas;
-    private TextureAtlas zombieAtlas;
-    private TextureAtlas spiderAtlas;
     private TextureAtlas creeperAtlas;
-    private TextureAtlas skeletonAtlas;
     private TextureAtlas endermanAtlas;
     // private TextureAtlas phantomAtlas;
+    private TextureAtlas skeletonAtlas;
+    private TextureAtlas spiderAtlas;
+    private TextureAtlas zombieAtlas;
+
     private EnumMap<EnemyType, TextureAtlas> enemyAtlases;
 
     private final List<Renderable> renderQueue = new ArrayList<>();
@@ -139,11 +142,7 @@ public class GameScreen implements Screen {
                 trees.add(new Tree(x, y, width, height, rootHeight, region, flipped, rotation));
 
                 // Add debug to confirm the texture region is not null
-                if (region == null) {
-                    System.err.println("[ERROR] Texture region is null for tile object at " + tileObj.getX() + ", " + tileObj.getY());
-                } else {
-                    System.out.println("[TREE DEBUG] Tile tree loaded at " + x + "," + y);
-                }
+                System.out.println("[TREE DEBUG] Tile tree loaded at " + x + "," + y);
             } else {
                 System.err.println(
                     "[TREE DEBUG] Tree object is not a tile object: " +
@@ -187,8 +186,8 @@ public class GameScreen implements Screen {
         // ^ USER-ADDED DEBUGGING ^
 
         // --- world size in tiles ---
-        worldWidth = map.getProperties().get("width", Integer.class);
-        worldHeight = map.getProperties().get("height", Integer.class);
+        worldWidth = map.getProperties().get("width", Integer.class) * tileSize;
+        worldHeight = map.getProperties().get("height", Integer.class) * tileSize;
 
         // v USER-ADDED DEBUGGING v
         System.out.println("User-Added Debugging... Loading map: " + currentLevel.mapPath);
@@ -283,7 +282,6 @@ public class GameScreen implements Screen {
                 ", type=" + obj.getProperties().get("type"));
 
         }
-
         return spawned;
     }
 
@@ -312,7 +310,7 @@ public class GameScreen implements Screen {
             enemies.add(enemy);
 
             if (enemy instanceof Monster) {
-                Monster monster = (Monster) enemy;
+                Monster monster = enemy;
                 TextureAtlas atlas = getAtlasesForMonster(monster);
                 enemyActors.add(new EnemyActor(enemy, atlas));
             } else {
@@ -324,9 +322,11 @@ public class GameScreen implements Screen {
 
     private void initWaves() {
         waves.clear();
-        waves.add(new Wave(3, false, Enderman.class));
-        waves.add(new Wave(5, true, Zombie.class));
-        waves.add(new Wave(8, true, Creeper.class));
+        waves.add(new Wave(50, true, Creeper.class));
+        waves.add(new Wave(40, false, Enderman.class));
+        waves.add(new Wave(40, true, Skeleton.class));
+        waves.add(new Wave(20, true, Spider.class));
+        waves.add(new Wave(100, true, Zombie.class));
     }
 
     private TextureAtlas getAtlasesForMonster(Monster monster) {
@@ -426,6 +426,12 @@ public class GameScreen implements Screen {
     }
 
     private void update(float delta) {
+        GameScreenDebug.frame++;
+
+        if (playerActor == null || playerActor.getLogic().isDead()) {
+            return;
+        }
+
         if (allLevelsCompleted) return; // stop updating after last level
 
         // updates player visuals
@@ -436,29 +442,57 @@ public class GameScreen implements Screen {
 
             if (enemy instanceof Monster) {
                 // triggers the most up-to-date state (idle, walking, chasing, ...)
+
                 Monster m = (Monster) enemy;
-                m.updateAI(playerActor, enemy);
+                LivingEntity playerTarget = playerActor.getLogic();
+                // if (playerTarget == null) continue;
+
+                enemy.update(delta);
+
+                // Update AI (decides state ONLY)
+                m.updateAI(playerTarget, enemy);
+
+                // Execute state behavior (issues movement OR attack OR stun)
+                enemy.getCurrentState().behave(enemy, playerTarget, delta);
+
+                // v USER-ADDED DEBUGGING v
+                System.out.println(
+                    "[COLLISION MOVE] frame=" + GameScreenDebug.frame +
+                        " enemy=" + enemy.getClass().getSimpleName() +
+                        " dx=" + (enemy.getMoveDX()) +
+                        " dy=" + (enemy.getMoveDY())
+                );
+                // ^ USER-ADDED DEBUGGING ^
+
+                // Apply movement ONCE if requested
+                if (enemy.canMove() && collision != null) {
+                    collision.move(enemy, delta);
+                }
             }
 
             // condition for enemy removal
-            if (enemy.getHp() <= 0) {
-                if (enemies.get(i).isMarkedForRemoval()) {
-                    enemies.removeIndex(i);
-                }
+            if (enemy.isMarkedForRemoval()) {
+                enemies.removeIndex(i);
                 enemyActors.remove(i);
                 enemiesKilled++;
-            }
-
-            if (collision != null) {
-                collision.move (
-                    enemy,
-                    enemy.getMoveSpeed() * delta,
-                    enemy.getMoveSpeed() * delta
-                );
+                continue;
             }
 
             // visuals for each "monster"
             enemyActors.get(i).update(delta, playerActor.getX());
+
+            // v USER-ADDED DEBUGGING v
+            System.out.printf(
+                "[DEBUG] frame=%d, enemy=%s, logicState=%s, attacking=%b, attackTimer=%.2f, animState=%s, stateTime=%.2f%n",
+                GameScreenDebug.frame,
+                enemy.getName(),
+                enemy.getCurrentState(),
+                enemy.isAttacking(),
+                enemy.getAttackTimer(),
+                enemyActors.get(i).getCurrentState(),
+                enemyActors.get(i).getStateTime()
+            );
+            // ^ USER-ADDED DEBUGGING ^
         }
 
         // checks level completion
@@ -487,8 +521,8 @@ public class GameScreen implements Screen {
             new TextureAtlas("Image_s/Sprite_s/Creeper/CAtlas/Creeper.atlas"));
         enemyAtlases.put(EnemyType.ENDERMAN,
             new TextureAtlas("Image_s/Sprite_s/Enderman/EAtlas/Enderman.atlas"));
-        /* enemyAtlases.put(EnemyType.PHANTOM,
-           new TextureAtlas("Image_s/Sprite_s/Phantom/PAtlas/Phantom.atlas")); */
+        //enemyAtlases.put(EnemyType.PHANTOM,
+            //new TextureAtlas("Image_s/Sprite_s/Phantom/PAtlas/Phantom.atlas"));
         enemyAtlases.put(EnemyType.SKELETON,
             new TextureAtlas("Image_s/Sprite_s/Skeleton/SAtlas/Skeleton.atlas"));
         enemyAtlases.put(EnemyType.SPIDER,
@@ -526,13 +560,15 @@ public class GameScreen implements Screen {
         // ^ TEMPORARY — FOR TESTING ^
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 25, 18);
+        viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
+        viewport.apply(true);
+
+        camera.position.set(WORLD_WIDTH / 2f, WORLD_HEIGHT / 2f, 0);
         camera.update();
     }
 
     @Override
     public void render(float delta) { // called 60x/s
-
         /* // v USER-ADDED DEBUGGING v
         System.out.println("[RENDER DEBUG] renderQueue size=" + renderQueue.size());
         for (Renderable r : renderQueue) {
@@ -542,8 +578,7 @@ public class GameScreen implements Screen {
 
         update(delta);
 
-        /* camera follows the player
-           dead-zone's size */
+        // dead-zone's size
         float deadZoneWidth = 8f;
         float deadZoneHeight = 5f;
 
@@ -609,7 +644,6 @@ public class GameScreen implements Screen {
         /* For coordinate-based smart rendering: the player passes in front of the tree when lower than the trunk root
            and walks behind it when his altitude is higher than the root */
         renderQueue.clear();
-
         renderQueue.addAll(trees);
 
         // System.out.println("[DEBUG] Total trees loaded: " + trees.size());
@@ -630,36 +664,6 @@ public class GameScreen implements Screen {
         }
 
         batch.end();
-    }
-
-    private void renderObjectLayer(SpriteBatch batch) {
-        var layer = map.getLayers().get("Objects");
-        if (layer == null) return;
-
-        for (MapObject obj : layer.getObjects()) {
-
-            if (!(obj instanceof TiledMapTileMapObject)) continue;
-
-            TiledMapTileMapObject tileObj = (TiledMapTileMapObject) obj;
-            TextureRegion region = tileObj.getTile().getTextureRegion();
-
-            int tileSize = map.getProperties().get("tilewidth", Integer.class);
-
-            float x = tileObj.getX() / tileSize;
-            float y = tileObj.getY() / tileSize;
-
-            float width  = region.getRegionWidth()  / tileSize;
-            float height = region.getRegionHeight() / tileSize;
-
-            batch.draw(
-                region,
-                x, y,
-                0f, 0f,                 // ORIGIN = bottom-left (Tiled-style)
-                width, height,
-                1f, 1f,
-                -tileObj.getRotation()  // negate clockwise → CCW
-            );
-        }
     }
 
     // ===== GET PLAYER SPAWN FROM TMX =====
@@ -705,6 +709,9 @@ public class GameScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
+        if (viewport != null) {
+            viewport.update(width, height, true);
+        }
     }
 
     @Override

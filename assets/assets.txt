@@ -60,7 +60,7 @@ Image_s/Sprite_s/Skeleton/skeleton__walk--03.png
 Image_s/Sprite_s/Skeleton/skeleton__walk--04.png
 Image_s/Sprite_s/Spider/SAtlas/Spider.atlas
 Image_s/Sprite_s/Spider/SAtlas/Spider.png
-Image_s/Sprite_s/Spider/Spider__sprite--sheet.png
+Image_s/Sprite_s/Spider/spider__idle.png
 Image_s/Sprite_s/Spider/spider__walk--01.png
 Image_s/Sprite_s/Spider/spider__walk--02.png
 Image_s/Sprite_s/Spider/spider__walk--03.png
@@ -117,6 +117,7 @@ Image_s/Sprite_s/unused__sheets/Creeper__sprite--sheet.png
 Image_s/Sprite_s/unused__sheets/Enderman__sprite--sheet.png
 Image_s/Sprite_s/unused__sheets/Husk_Zombie__sprite--sheet.png
 Image_s/Sprite_s/unused__sheets/Skeleton__sprite--sheet.png
+Image_s/Sprite_s/unused__sheets/Spider__sprite--sheet.png
 Image_s/Sprite_s/unused__sheets/Steve__sprite--sheet.png
 Image_s/Sprite_s/unused__sheets/alt--steve__sprite--sheet.png
 Image_s/collision_point.png

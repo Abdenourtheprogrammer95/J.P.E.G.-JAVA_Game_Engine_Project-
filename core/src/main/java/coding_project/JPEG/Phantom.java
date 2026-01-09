@@ -3,6 +3,7 @@ package coding_project.JPEG;
 
 import java.util.Map;
 
+@Deprecated
 public class Phantom extends Entity implements Monster {
     private String path = "Image_s/Sprite_s/Enemy.png";
 
