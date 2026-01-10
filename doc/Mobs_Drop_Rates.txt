@@ -35,7 +35,7 @@ Zombies have a 2.5% chance of dropping either an iron ingot, carrot, or potato u
 • 1.50% with Looting II
 • 1.83% with Looting III
 
-*** Phantom_Membrane: (FIX)
+*** Phantom_Membrane: (FIX) // Now deprecated
 Phantoms drop 0–1 phantom membrane when killed by a player or tamed wolf. Looting
 increases the maximum drops by 1 per level, for a maximum of 4 with Looting III.
 

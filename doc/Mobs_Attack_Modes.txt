@@ -1,0 +1,9 @@
+Hostile mobs:
+*** Zombies are the slowest mobs; they punch you with their fists.
+*** Skeletons are range-attack mobs; they can shoot you with their bow from a set distance.
+*** Phantoms (now deprecated) are mobs that will distance themselves from you, only to come back rushing at you with a speed boost.
+* Creepers are kamikaze: they self-explode when at a set distance from the player, damaging anything in the area.
+
+Passive mobs (by choice):
+*** Endermen are fast travelers who can also teleport, but they don’t attack.
+*** Spiders crawl towards you, but don’t hit you.
