@@ -1,6 +1,18 @@
+<<<<<<< HEAD
 # IntelliJ
 .idea/
 *.iml
+=======
+# IntelliJ/LibGDX
+.idea/
+*.iml
+.gradle/
+gradle-wrapper.jar
+gradle-wrapper.properties
+
+# Git commands remnants
+*tatus
+>>>>>>> master
 
 # Build output
 out/
@@ -8,7 +20,12 @@ build/
 target/
 
 # Miscellaneous
+<<<<<<< HEAD
 other/
+=======
+*.log
+*.md
+>>>>>>> master
 
 # Tiled
 *.tiled-project
