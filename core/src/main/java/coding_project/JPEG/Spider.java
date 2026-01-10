@@ -6,13 +6,13 @@ public class Spider extends Entity implements Monster {
     private final String path = "Image_s/Sprite_s/Spider/spider__idle.png";
 
     public Spider() {
-		super(8, 2, "Spider", 6.0f);
+		super(8, 2, "Spider", 6.0f, 33f/16f, 17f/16f);
         this.threshold = 16f;
 		setSprite(SpriteLoader.load(path));
 	}
 
 	public Spider(int hp, int damage, float moveSpeed) {
-		super(hp, damage, "Spider", moveSpeed);
+		super(hp, damage, "Spider", moveSpeed, 33f/16f, 17f/16f);
         this.threshold = 16f;
 		setSprite(SpriteLoader.load(path));
 	}
@@ -42,7 +42,7 @@ public class Spider extends Entity implements Monster {
             case ATTACK:
             case HURT:
             case  DEAD:
-                return null;
+                return "spider__walk";
             default:
                 throw new IllegalArgumentException("Unknown state " + state);
         }

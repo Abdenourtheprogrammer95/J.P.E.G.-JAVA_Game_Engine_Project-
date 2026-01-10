@@ -20,16 +20,24 @@ public interface Monster {
                 )
             )
         );
+
+        System.out.println(
+            "[HITBOX] " + enemy.getName() +
+                " pos=(" + enemy.getXpos() + "," + enemy.getYpos() + ")" +
+                " size=(" + enemy.getCollisionWidth() + "," + enemy.getCollisionHeight() + ")" +
+                " center=(" + enemy.getCenterX() + "," + enemy.getCenterY() + ")" +
+                " | PLAYER center=(" +
+                target.getCenterX() + "," + target.getCenterY() + ")"
+        );
         // ^ USER-ADDED DEBUGGING ^
 
         EnemyState state = enemy.getCurrentState();
 
-        if (enemy.isAttacking() ||
-            state == EnemyState.ATTACK || state == EnemyState.HURT || state == EnemyState.DEAD) {
+        if (enemy.isAttacking() || state == EnemyState.HURT || state == EnemyState.DEAD) {
             return;
         }
 
-        float dx = target.getXpos() - enemy.getXpos(), dy = target.getYpos() - enemy.getYpos(),
+        float dx = target.getCenterX() - enemy.getCenterX(), dy = target.getCenterY() - enemy.getCenterY(),
             dist = (float) Math.sqrt(dx * dx + dy * dy);
 
         if (dist < 0.2f) {
@@ -37,16 +45,14 @@ public interface Monster {
             return;
         }
 
-        if (dist <= enemy.threshold*0.08f) {
-            if (this.canAttack() && !enemy.isAttacking()) {
-                enemy.startAttack(target);
-            } else {
-                enemy.setCurrentState(EnemyState.IDLE);
-                enemy.clearMoveRequest();
-            }
-        } else if (dist <= enemy.threshold) {
+        if (enemy.canStartAttack(target)) {
+            enemy.setCurrentState(EnemyState.ATTACK);
+            return;
+        }
+
+        if (dist <= enemy.threshold) {
             enemy.setCurrentState(EnemyState.CHASE);
-        } else if (dist <= enemy.threshold*1.5f) {
+        } else if (dist <= enemy.threshold * 1.5f) {
             enemy.setCurrentState(EnemyState.WALK);
         } else {
             enemy.setCurrentState(EnemyState.IDLE);

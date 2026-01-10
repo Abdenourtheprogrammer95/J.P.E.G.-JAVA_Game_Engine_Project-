@@ -129,6 +129,21 @@ public abstract class Entity implements Movable, Droppable, DamageSource {
 		this.y_pos = y_pos;
 	}
 
+    public boolean intersects(Entity other) {
+        return getXpos() < other.getXpos() + other.getCollisionWidth() &&
+            getXpos() + getCollisionWidth() > other.getXpos() &&
+            getYpos() < other.getYpos() + other.getCollisionHeight() &&
+            getYpos() + getCollisionHeight() > other.getYpos();
+    }
+
+    public float getCenterX() {
+        return getXpos() + getCollisionWidth() * 0.5f;
+    }
+
+    public float getCenterY() {
+        return getYpos() + getCollisionHeight() * 0.5f;
+    }
+
     public float getMoveDX() {
         return this.moveDX;
     }
@@ -139,6 +154,11 @@ public abstract class Entity implements Movable, Droppable, DamageSource {
 
     public float getAttackTimer() {
         return attackTimer;
+    }
+
+    protected boolean isVerticallyAligned(LivingEntity target, float tolerance) {
+        float dy = Math.abs(target.getCenterY() - getCenterY());
+        return dy <= tolerance;
     }
 
     public void requestMove(float dx, float dy) {
@@ -265,7 +285,7 @@ public abstract class Entity implements Movable, Droppable, DamageSource {
 
         attackTimer += delta;
 
-        clearMoveRequest(); // ensure NO movement during attack
+        clearMoveRequest(); // ensure no movement during attack
 
         if (attackTimer >= attackDuration) {
             attackTimer = 0f;
@@ -286,18 +306,23 @@ public abstract class Entity implements Movable, Droppable, DamageSource {
     }
 
     public void onAttackFinished() {
+        attacking = false;
         attackTriggered = false;
         setCurrentState(EnemyState.CHASE);
     }
 
     protected void onAttackRelease() {
         attacking = false;
-        attackTriggered = false;
-        setCurrentState(EnemyState.CHASE);
     }
 
     public boolean isAttacking() {
         return attacking;
+    }
+
+    public boolean canStartAttack(LivingEntity target) {
+        if (!(target instanceof Entity)) return false;
+        Entity t = (Entity) target;
+        return intersects(t); // default attack: melee
     }
 
     @Deprecated
@@ -357,7 +382,8 @@ public abstract class Entity implements Movable, Droppable, DamageSource {
     }
 
     public void triggerChase(LivingEntity target) {
-        float dx = target.getXpos() - getXpos(), dy = target.getYpos() - getYpos(), len2 = dx * dx + dy * dy;
+        float dx = target.getCenterX() - getCenterX(), dy = target.getCenterY() - getCenterY(),
+            len2 = dx * dx + dy * dy;
 
         if (len2 < 0.0001f) {
             clearMoveRequest();

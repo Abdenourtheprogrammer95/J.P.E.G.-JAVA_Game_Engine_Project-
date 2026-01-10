@@ -1,6 +1,7 @@
 package coding_project.JPEG;
 
 public interface Movable {
+    @Deprecated
     default void move(Entity entity, float dx, float dy, float delta) {
         System.out.println(
             "[MOVE] frame=" + com.mygdx.game.GameScreenDebug.frame +
@@ -12,7 +13,7 @@ public interface Movable {
                 " caller=" + Thread.currentThread().getStackTrace()[2].getMethodName()
         );
 
-        entity.setXpos(entity.getXpos() + dx * entity.getMoveSpeed() * delta); // your "* delta" saved my life
+        entity.setXpos(entity.getXpos() + dx * entity.getMoveSpeed() * delta);
         entity.setYpos(entity.getYpos() + dy * entity.getMoveSpeed() * delta);
 
         System.out.println(

@@ -74,6 +74,6 @@ public class Collision {
             e.setYpos(newY);
         }
 
-        e.clearMoveRequest();
+        //e.clearMoveRequest();
     }
 }

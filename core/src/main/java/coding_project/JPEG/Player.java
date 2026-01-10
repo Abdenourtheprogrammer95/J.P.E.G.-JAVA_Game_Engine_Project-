@@ -4,30 +4,40 @@ import java.util.Map;
 
 public class Player extends Entity implements LivingEntity, AttackTarget {
     private static int weaponDamage, armorResistance, experience = 0;
+    private static final float HITBOX_WIDTH = 14f/16f, HITBOX_HEIGHT = 16f/16f;
 
     @Deprecated
     private static int bowDamage, quiver = 0;
+
+    private void initHitBoxes() {
+        this.collisionHeight = HITBOX_HEIGHT;
+        this.collisionWidth = HITBOX_WIDTH;
+    }
 
 	public Player() {
 		super(600, 1, "Steve");
 		this.weaponDamage = 1;
 		this.armorResistance = 10;
+        initHitBoxes();
 	}
 
 	public Player(String name) {
 		super(600, 1, name);
+        initHitBoxes();
 	}
 
 	public Player(int weaponDamage, int armor_resistance) {
 		super(600, 1, "Steve");
 		this.weaponDamage = weaponDamage;
 		this.armorResistance = armor_resistance;
+        initHitBoxes();
 	}
 
 	public Player(String name, int weaponDamage, int armorResistance) {
 		super(600, 1, name);
 		this.weaponDamage = weaponDamage;
 		this.armorResistance = armorResistance;
+        initHitBoxes();
 	}
 
     public Player(String name, int weaponDamage, int armorResistance, int experience) {
@@ -35,6 +45,7 @@ public class Player extends Entity implements LivingEntity, AttackTarget {
         this.weaponDamage = weaponDamage;
         this.armorResistance = armorResistance;
         this.experience = experience;
+        initHitBoxes();
     }
 
     public static int getBowDamage() {

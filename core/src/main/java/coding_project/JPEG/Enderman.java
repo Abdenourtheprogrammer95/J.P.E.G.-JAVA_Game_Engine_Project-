@@ -6,7 +6,7 @@ public class Enderman extends Entity implements Monster {
     private final String path = "Image_s/Sprite_s/Enderman/enderman__idle.png";
 
 	public Enderman() {
-		super(20, 7, "Enderman", 6.0f);
+		super(20, 7, "Enderman", 6.0f, 10f/16f, 27f/16f);
         this.threshold = 64f;
 		setSprite(SpriteLoader.load(path));
 	}

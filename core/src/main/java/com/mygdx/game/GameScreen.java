@@ -322,8 +322,8 @@ public class GameScreen implements Screen {
 
     private void initWaves() {
         waves.clear();
-        waves.add(new Wave(50, true, Creeper.class));
-        waves.add(new Wave(40, false, Enderman.class));
+        //waves.add(new Wave(50, true, Creeper.class));
+        //waves.add(new Wave(40, false, Enderman.class));
         waves.add(new Wave(40, true, Skeleton.class));
         waves.add(new Wave(20, true, Spider.class));
         waves.add(new Wave(100, true, Zombie.class));

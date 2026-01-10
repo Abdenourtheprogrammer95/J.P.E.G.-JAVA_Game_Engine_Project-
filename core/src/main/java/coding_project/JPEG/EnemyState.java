@@ -26,21 +26,16 @@ public enum EnemyState {
     ATTACK {
         @Override
         public void behave(Entity enemy, LivingEntity target, float delta) {
-            Monster m = (Monster) enemy;
-
-            if (!m.canAttack()) {
-                enemy.setCurrentState(EnemyState.CHASE);
+            if (!(enemy instanceof Monster) || !(target instanceof AttackTarget)) return;
+            if (target.isDead()) {
+                enemy.onAttackFinished();
                 return;
             }
-
-            if (!(target instanceof AttackTarget)) return;
-            if (target.isDead()) return;
 
             enemy.clearMoveRequest();
 
             if (!enemy.isAttacking()) {
                 enemy.startAttack(target);
-                // ((AttackTarget) target).takeDamage(enemy.getDamage());
             }
         }
     },
